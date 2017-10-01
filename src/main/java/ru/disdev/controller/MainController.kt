@@ -95,6 +95,10 @@ class MainController : Controller {
                 showError("Already exists", "User with login ${it.login.value} already exists")
                 return@InputDataController false
             }
+            if (!isNew && login == user.login.value && it.blocked.value) {
+                showError("You cannot block yourself")
+                return@InputDataController false
+            }
             true
         }, {
             saveUser(it.apply {
