@@ -19,6 +19,7 @@ class LoadTask : Task<Unit>() {
         } else {
             loadData()
         }
+        Thread.sleep(3000)
     }
 }
 

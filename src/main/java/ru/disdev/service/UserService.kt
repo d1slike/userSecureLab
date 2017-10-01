@@ -3,6 +3,8 @@ package ru.disdev.service
 import com.opencsv.CSVReader
 import com.opencsv.CSVWriter
 import javafx.collections.FXCollections
+import javafx.collections.MapChangeListener
+import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import ru.disdev.entity.Role
 import ru.disdev.entity.User
@@ -13,6 +15,8 @@ import java.io.FileWriter
 const val FILE_NAME = "./users.txt"
 
 private val data: ObservableMap<String, User> = FXCollections.observableHashMap()
+private var listener: MapChangeListener<String, User>? = null
+
 
 fun saveUser(user: User): User {
     data[user.login.value] = user
@@ -21,6 +25,33 @@ fun saveUser(user: User): User {
 }
 
 fun findByLogin(login: String) = data[login]
+
+fun deleteByLogin(login: String) {
+    data.remove(login)
+    writeFile()
+}
+
+fun findAll(): ObservableList<User> {
+    if (listener != null) data.removeListener(listener)
+    val list = FXCollections.observableArrayList(data.values)
+    listener = MapChangeListener {
+        if (it.wasAdded() && it.wasRemoved()) {
+            var index: Int = -1
+            list.forEachIndexed { i, user ->
+                if (user.login.value == it.key) index = i
+            }
+            if (index >= 0) {
+                list[index] = it.valueAdded
+            }
+        } else if (it.wasAdded()) {
+            list.add(it.valueAdded)
+        } else if (it.wasRemoved()) {
+            list.removeIf { user -> user.login.value == it.key }
+        }
+    }
+    data.addListener(listener)
+    return list
+}
 
 private fun writeFile() {
     CSVWriter(FileWriter(FILE_NAME)).use {

@@ -66,7 +66,7 @@ public class TableUtils {
                             column.setCellValueFactory(param -> {
                                 try {
                                     Property<Boolean> o = (Property<Boolean>) FieldUtils.readField(field, param.getValue());
-                                    return new SimpleStringProperty(o.getValue() ? "Да" : "Нет");
+                                    return new SimpleStringProperty(o.getValue() ? "Yes" : "No");
                                 } catch (IllegalAccessException ignored) {
                                 }
                                 return new SimpleStringProperty("bad data");

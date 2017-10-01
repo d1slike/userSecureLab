@@ -10,7 +10,7 @@ import ru.disdev.utils.AlertUtils
 
 class LoadController : Controller {
 
-    private val INITIAL_MESSAGE = "Загрузка данных"
+    private val INITIAL_MESSAGE = "Loading"
 
     @FXML
     private lateinit var progressBar: JFXProgressBar
@@ -21,6 +21,7 @@ class LoadController : Controller {
         val service = LoadDataService()
         service.setOnSucceeded({ MainApplication.nextState() })
         service.setOnFailed({ event -> AlertUtils.showMessageAndCloseProgram(event.source.exception) })
+        service.progressProperty()
         progressBar.progressProperty().bind(service.progressProperty())
         infoLabel.text = INITIAL_MESSAGE
         service.start()

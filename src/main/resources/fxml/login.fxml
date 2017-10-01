@@ -49,7 +49,7 @@
                 </JFXDrawer>
             </left>
             <center>
-                <JFXScrollPane fx:id="body" BorderPane.alignment="CENTER"/>
+                <JFXScrollPane fx:id="body" prefHeight="500.0" prefWidth="1000.0" BorderPane.alignment="CENTER"/>
             </center>
         </BorderPane>
     </children>

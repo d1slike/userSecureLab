@@ -7,16 +7,13 @@ import javafx.fxml.FXML
 import javafx.scene.control.Label
 import javafx.scene.layout.StackPane
 import org.mindrot.jbcrypt.BCrypt
+import ru.disdev.MainApplication
+import ru.disdev.entity.ChangePasswordRequest
 import ru.disdev.entity.LoginRequest
 import ru.disdev.entity.Role
 import ru.disdev.entity.User
 import ru.disdev.service.*
 import ru.disdev.utils.PopupUtils
-
-
-private var user: User? = null
-
-fun getUser() = user
 
 class LoginController : Controller {
 
@@ -31,6 +28,7 @@ class LoginController : Controller {
     @FXML
     private lateinit var root: StackPane
 
+    private var user: User = User()
     private var loginAttempt: Int = 0
     private var loginForm: StackPane? = null
     private val menu: JFXListView<Label> = JFXListView()
@@ -52,11 +50,43 @@ class LoginController : Controller {
         menu.selectionModel.selectedIndexProperty().addListener { _, _, _ ->
             val item = menu.selectionModel.selectedItem
             val text = item.text
-            if (text == EXIT) {
-                Platform.exit()
+            if (text == LOGOUT) {
+                MainApplication.nextState()
+            } else if (text == CHANGE_PASSWORD) {
+                loginForm = InputDataController(ChangePasswordRequest(),
+                        "Change",
+                        "Change password", {
+                    val oldPass = it.oldPassword.value
+                    val pass = it.password.value
+                    val pass2 = it.passwordConfirm.value
+                    if (!BCrypt.checkpw(oldPass, user.password.value)) {
+                        showError("Incorrect old password", "Try again")
+                        return@InputDataController false
+                    }
+                    if (pass == oldPass) {
+                        showError("New password is equal old", "Please change new password")
+                        return@InputDataController false
+                    }
+                    if (pass2 != pass) {
+                        showError("Confirmed password not equal password")
+                        return@InputDataController false
+                    }
+                    if (user.checkPassword.value && !validateNewPass(pass)) {
+                        showError("Invalid password", "В пароле недопустимо наличие латинских букв, символов кириллицы и цифр")
+                        return@InputDataController false
+                    }
+                    true
+                }, {
+                    saveUser(user.apply {
+                        password.value = BCrypt.hashpw(it.password.value, BCrypt.gensalt(13))
+                    })
+                    PopupUtils.infoPopup(body, "Password successfully changed!", 3)
+                    loginForm = null
+                }).show()
+            } else {
+                val component = getRoute(text)
+                if (component != null) body.content = component
             }
-            val component = getRoute(text)
-            if (component != null) body.content = component
         }
         titleBurgerContainer.setOnMouseClicked({
             if (drawer.isHidden || drawer.isHidding) {
@@ -96,13 +126,23 @@ class LoginController : Controller {
             }, {
                 val byLogin: User = findByLogin(it.login.value)!!
                 user = byLogin
-                loadRouters()
+                loadRouters(byLogin).thenAccept {
+                    Platform.runLater {
+                        menu.selectionModel.selectFirst()
+                    }
+                }
                 PopupUtils.infoPopup(body, "Hello, ${byLogin.firstName.value} ${byLogin.lastName.value}", 3)
-                menu.items.addAll(Label(PROFILE), Label(ABOUT), Label(EXIT))
+                menu.items.addAll(Label(ABOUT), Label(CHANGE_PASSWORD), Label(LOGOUT))
                 if (byLogin.role.value == Role.ADMIN) {
                     menu.items.add(0, Label(USERS))
                 }
             }).show({ Platform.exit() })
+        }
+    }
+
+    private fun validateNewPass(pass: String): Boolean {
+        return pass.all {
+            !(it in 'a'..'Z' || (it in 'а'..'Я') || (it in '0'..'9'))
         }
     }
 

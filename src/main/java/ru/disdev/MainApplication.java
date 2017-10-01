@@ -67,7 +67,9 @@ public class MainApplication extends Application {
             FXMLLoader loader = new FXMLLoader(getFXMLUrl(currentState.fxmlName));
             Pane pane = loader.load();
             Controller controller = loader.getController();
-            controller.acceptData(payload);
+            if (controller != null) {
+                controller.acceptData(payload);
+            }
             mainStage.hide();
             //JFXDecorator decorator = new JFXDecorator(mainStage, pane);
             //decorator.setCustomMaximize(true);

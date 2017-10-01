@@ -74,8 +74,8 @@ public class InputDataController<T> implements Controller {
 
     }
 
-    public void show() {
-        show(null);
+    public StackPane show() {
+        return show(null);
     }
 
     public StackPane show(Runnable closeHandler) {
@@ -268,7 +268,10 @@ public class InputDataController<T> implements Controller {
                 newBox = new JFXComboBox();
                 newBox.getItems().addAll(clazz.getEnumConstants());
                 newBox.valueProperty().bindBidirectional((Property) FieldUtils.readField(field, data));
-                newBox.setValue(newBox.getItems().get(0));
+                Object value = newBox.valueProperty().getValue();
+                if (value == null) {
+                    newBox.setValue(newBox.getItems().get(0));
+                }
             }
         } else if (field.isAnnotationPresent(ValueSource.class)) {
             /*String methodName = field.getAnnotation(ValueSource.class).methodName();

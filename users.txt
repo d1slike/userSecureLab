@@ -1,1 +1,2 @@
-"ADMIN","$2a$13$NBl1iPdDNlm4ccFRYcaiB..N7khNfwBRBd2.X2RfpaLxY1ZYaPsPa","Admin","","false","true","ADMIN"
+"test","$2a$13$xIJQzfUI/1x4LJ.Q7s3qm.FjlfBJyEHKtErHJgJnvN4MOP/E6sf96","Test","test","false","true","USER"
+"ADMIN","$2a$13$WxKaMJnFe1xPnadm2KIr4urHhjBV1QnWt.HIWIB0SawVfQC8pQJD6","Admin","","false","true","ADMIN"

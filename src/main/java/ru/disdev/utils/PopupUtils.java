@@ -40,6 +40,8 @@ public class PopupUtils {
         Label label = new Label(message);
         label.setAlignment(Pos.CENTER);
         label.setGraphic(icon);
+        label.setWrapText(true);
+        label.setPrefWidth(Region.USE_COMPUTED_SIZE);
         label.setPadding(new Insets(20));
         //label.getStylesheets().add(textStyle);
         JFXPopup popup = new JFXPopup(label);

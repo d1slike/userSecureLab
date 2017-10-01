@@ -24,7 +24,7 @@ public class FieldValidatorUtils {
 
     public static ValidatorBase getRequiredFieldValidator() {
         RequiredFieldValidator validator = new RequiredFieldValidator();
-        validator.setMessage("Обязательно для заполнения");
+        validator.setMessage("Required");
         validator.setErrorStyleClass("error");
         return validator;
     }

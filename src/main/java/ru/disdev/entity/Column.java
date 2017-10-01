@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 public @interface Column {
     String name();
 
-    Type type();
+    Type type() default Type.STRING;
 
     String description() default "";
 

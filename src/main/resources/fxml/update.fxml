@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.disdev.controller.LoadController">
@@ -16,7 +15,16 @@
                         <Insets bottom="25.0"/>
                     </VBox.margin>
                 </Label>
-                <JFXProgressBar fx:id="progressBar"/>
+                <StackPane>
+                    <JFXSpinner styleClass="materialDesign-purple, first-spinner" startingAngle="-40"/>
+                    <JFXSpinner styleClass="materialDesign-blue, second-spinner" startingAngle="-90"/>
+                    <JFXSpinner styleClass="materialDesign-cyan, third-spinner" startingAngle="-120"/>
+                    <JFXSpinner styleClass="materialDesign-green, fourth-spinner" startingAngle="-150"/>
+                    <JFXSpinner styleClass="materialDesign-yellow, fifth-spinner" startingAngle="-180"/>
+                    <JFXSpinner styleClass="materialDesign-orange, sixth-spinner" startingAngle="-210"/>
+                    <JFXSpinner styleClass="materialDesign-red, seventh-spinner" startingAngle="-240"/>
+                </StackPane>
+                <JFXProgressBar visible="false" fx:id="progressBar"/>
             </children>
         </VBox>
     </center>
