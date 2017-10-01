@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<StackPane fx:id="root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ru.disdev.controller.LoginController">
+    <children>
+        <!-- Header -->
+        <BorderPane>
+            <top>
+                <VBox spacing="20">
+                    <children>
+                        <JFXToolbar>
+                            <leftItems>
+                                <JFXRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
+                                    <control>
+                                        <StackPane fx:id="titleBurgerContainer">
+                                            <children>
+                                                <JFXHamburger fx:id="titleBurger">
+                                                    <animation>
+                                                        <HamburgerBackArrowBasicTransition/>
+                                                    </animation>
+                                                </JFXHamburger>
+                                            </children>
+                                        </StackPane>
+                                    </control>
+                                </JFXRippler>
+                                <Label text="User Secure">Material Design</Label>
+                            </leftItems>
+                            <rightItems>
+                                <JFXRippler fx:id="optionsRippler" maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
+                                    <control>
+                                        <StackPane fx:id="optionsBurger"/>
+                                    </control>
+                                </JFXRippler>
+                            </rightItems>
+                        </JFXToolbar>
+                    </children>
+                </VBox>
+            </top>
+            <left>
+                <JFXDrawer fx:id="drawer" defaultDrawerSize="250" direction="LEFT" BorderPane.alignment="CENTER">
+                    <styleClass>
+                        <String fx:value="body"/>
+                    </styleClass>
+                </JFXDrawer>
+            </left>
+            <center>
+                <JFXScrollPane fx:id="body" BorderPane.alignment="CENTER"/>
+            </center>
+        </BorderPane>
+    </children>
+</StackPane>
