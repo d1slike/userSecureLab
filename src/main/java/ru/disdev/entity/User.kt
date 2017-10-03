@@ -29,7 +29,7 @@ class User {
     @Column(name = "Blocked", type = Type.BOOLEAN)
     val blocked: BooleanProperty = SimpleBooleanProperty(false)
     @CheckBox(name = "Validate password")
-    @Column(name = "Blocked", type = Type.BOOLEAN)
+    @Column(name = "Validate password", type = Type.BOOLEAN)
     val checkPassword: BooleanProperty = SimpleBooleanProperty(true)
     @ComboBox(name = "Role")
     @Column(name = "Role", type = Type.OBJECT)

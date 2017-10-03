@@ -36,6 +36,7 @@ class MainController : Controller {
     private var form: StackPane? = null
     private var errorDialog: JFXDialog? = null
     private var isNew: Boolean = false
+    private var userToEdit: User = User();
 
 
     override fun acceptData(`object`: Any) {
@@ -55,7 +56,8 @@ class MainController : Controller {
         editButton.text = ""
         editButton.onAction = EventHandler {
             isNew = false
-            editUser(userTable.selectionModel.selectedItem.copy().apply {
+            userToEdit = userTable.selectionModel.selectedItem
+            editUser(userToEdit.copy().apply {
                 password.value = ""
             })
         }
@@ -102,7 +104,12 @@ class MainController : Controller {
             true
         }, {
             saveUser(it.apply {
-                password.value = BCrypt.hashpw(password.value, BCrypt.gensalt(13))
+                val pass = password.value
+                if (pass != null && !pass.isBlank()) {
+                    password.value = BCrypt.hashpw(pass, BCrypt.gensalt(13))
+                } else {
+                    password.value = userToEdit.password.value
+                }
             })
             PopupUtils.infoPopup(root, "User successfully saved", 3)
         }).show()

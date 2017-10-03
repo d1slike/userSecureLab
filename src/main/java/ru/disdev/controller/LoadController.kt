@@ -10,7 +10,7 @@ import ru.disdev.utils.AlertUtils
 
 class LoadController : Controller {
 
-    private val INITIAL_MESSAGE = "Loading"
+    private val INITIAL_MESSAGE = "Loading..."
 
     @FXML
     private lateinit var progressBar: JFXProgressBar
