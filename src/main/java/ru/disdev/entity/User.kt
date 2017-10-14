@@ -71,9 +71,7 @@ class ChangePasswordRequest {
     val passwordConfirm: StringProperty = SimpleStringProperty("")
 }
 
-class SetPassword {
-    @TextField(name = "Password", type = Type.PASSWORD)
-    val password: StringProperty = SimpleStringProperty("")
-    @TextField(name = "Password once again", type = Type.PASSWORD)
-    val passwordConfirm: StringProperty = SimpleStringProperty("")
+class PhraseRequest {
+    @TextField(name = "Key phrase", type = Type.PASSWORD)
+    val phrase: StringProperty = SimpleStringProperty("")
 }

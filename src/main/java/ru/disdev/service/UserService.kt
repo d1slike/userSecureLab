@@ -10,14 +10,20 @@ import ru.disdev.entity.Role
 import ru.disdev.entity.User
 import ru.disdev.utils.DaemonThreadPool
 import ru.disdev.utils.ParseUtils
-import java.io.FileReader
-import java.io.FileWriter
+import ru.disdev.utils.getSafeFileInputStream
+import ru.disdev.utils.getSaveFileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.util.logging.Level
+import java.util.logging.Logger
+import javax.xml.bind.DatatypeConverter
 
 const val FILE_NAME = "./users.txt"
+val PHRASE: ByteArray = DatatypeConverter.parseHexBinary("928ba00830cc1d29a170ed7906c1c3b6")
 
 private val data: ObservableMap<String, User> = FXCollections.observableHashMap()
 private var listener: MapChangeListener<String, User>? = null
-
+private val log: Logger = Logger.getLogger("UserService");
 
 fun saveUser(user: User): User {
     data[user.login.value] = user
@@ -56,25 +62,30 @@ fun findAll(): ObservableList<User> {
 
 private fun writeFile() {
     DaemonThreadPool.execute {
-        CSVWriter(FileWriter(FILE_NAME)).use {
-            it.writeAll(data.values.map {
-                val array: Array<String?> = arrayOfNulls(8)
-                array[0] = it.login.value
-                array[1] = it.password.value
-                array[2] = it.firstName.value
-                array[3] = it.lastName.value
-                array[4] = it.blocked.value.toString()
-                array[5] = it.checkPassword.value.toString()
-                array[6] = it.role.value.name
-                array[7] = it.setPassword.value.toString()
-                array
-            })
+        try {
+            CSVWriter(OutputStreamWriter(getSaveFileOutputStream(FILE_NAME))).use {
+                it.writeAll(data.values.map {
+                    val array: Array<String?> = arrayOfNulls(8)
+                    array[0] = it.login.value
+                    array[1] = it.password.value
+                    array[2] = it.firstName.value
+                    array[3] = it.lastName.value
+                    array[4] = it.blocked.value.toString()
+                    array[5] = it.checkPassword.value.toString()
+                    array[6] = it.role.value.name
+                    array[7] = it.setPassword.value.toString()
+                    array
+                })
+            }
+        } catch (e: Exception) {
+            log.log(Level.INFO, "Error while saving user", e)
         }
+
     }
 }
 
 internal fun loadData() {
-    CSVReader(FileReader(FILE_NAME)).use {
+    CSVReader(InputStreamReader(getSafeFileInputStream(FILE_NAME))).use {
         it.readAll().map {
             val user = User()
             user.login.value = it[0]

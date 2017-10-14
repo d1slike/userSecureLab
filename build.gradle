@@ -43,6 +43,7 @@ dependencies {
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	compile 'de.jensd:fontawesomefx:8.0.10'
+	compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 	compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
 	testCompile 'junit:junit:4.12'
 }
