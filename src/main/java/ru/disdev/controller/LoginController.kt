@@ -53,36 +53,7 @@ class LoginController : Controller {
             if (text == LOGOUT) {
                 MainApplication.nextState()
             } else if (text == CHANGE_PASSWORD) {
-                loginForm = InputDataController(ChangePasswordRequest(),
-                        "Change",
-                        "Change password", {
-                    val oldPass = it.oldPassword.value
-                    val pass = it.password.value
-                    val pass2 = it.passwordConfirm.value
-                    if (!BCrypt.checkpw(oldPass, user.password.value)) {
-                        showError("Incorrect old password", "Try again")
-                        return@InputDataController false
-                    }
-                    if (pass == oldPass) {
-                        showError("New password is equal old", "Please change new password")
-                        return@InputDataController false
-                    }
-                    if (pass2 != pass) {
-                        showError("Confirmed password not equal password")
-                        return@InputDataController false
-                    }
-                    if (user.checkPassword.value && !validateNewPass(pass)) {
-                        showError("Invalid password", "В пароле недопустимо наличие латинских букв, символов кириллицы и цифр")
-                        return@InputDataController false
-                    }
-                    true
-                }, {
-                    saveUser(user.apply {
-                        password.value = BCrypt.hashpw(it.password.value, BCrypt.gensalt(13))
-                    })
-                    PopupUtils.infoPopup(body, "Password successfully changed!", 3)
-                    loginForm = null
-                }).show()
+                changePass()
             } else {
                 val component = getRoute(text)
                 if (component != null) body.content = component
@@ -100,7 +71,7 @@ class LoginController : Controller {
 
     private fun login() {
         Platform.runLater {
-            loginForm = InputDataController(LoginRequest(), "Войти", "Вход", {
+            loginForm = InputDataController(LoginRequest(), "Sign up", "Sign up", {
                 val login = it.login.value
                 val password = it.password.value
                 val user = findByLogin(login)
@@ -126,17 +97,61 @@ class LoginController : Controller {
             }, {
                 val byLogin: User = findByLogin(it.login.value)!!
                 user = byLogin
-                loadRouters(byLogin).thenAccept {
-                    Platform.runLater {
-                        menu.selectionModel.selectFirst()
-                    }
+                if (user.setPassword.value) {
+                    changePass({ loadUI(user) }, { Platform.exit() })
+                } else {
+                    loadUI(byLogin)
                 }
-                PopupUtils.infoPopup(body, "Hello, ${byLogin.firstName.value} ${byLogin.lastName.value}", 3)
-                menu.items.addAll(Label(ABOUT), Label(CHANGE_PASSWORD), Label(LOGOUT))
-                if (byLogin.role.value == Role.ADMIN) {
-                    menu.items.add(0, Label(USERS))
-                }
+
             }).show({ Platform.exit() })
+        }
+    }
+
+    private fun changePass(callback: () -> Unit = {}, closeCallbak: () -> Unit = {}) {
+        loginForm = InputDataController(ChangePasswordRequest(),
+                "Change",
+                "Change password", {
+            val oldPass = it.oldPassword.value
+            val pass = it.password.value
+            val pass2 = it.passwordConfirm.value
+            if (!BCrypt.checkpw(oldPass, user.password.value)) {
+                showError("Incorrect old password", "Try again")
+                return@InputDataController false
+            }
+            if (pass == oldPass) {
+                showError("New password is equal old", "Please change new password")
+                return@InputDataController false
+            }
+            if (pass2 != pass) {
+                showError("Confirmed password not equal password")
+                return@InputDataController false
+            }
+            if (user.checkPassword.value && !validateNewPass(pass)) {
+                showError("Invalid password", "В пароле недопустимо наличие латинских букв, символов кириллицы и цифр")
+                return@InputDataController false
+            }
+            true
+        }, {
+            callback()
+            saveUser(user.apply {
+                setPassword.value = false
+                password.value = BCrypt.hashpw(it.password.value, BCrypt.gensalt(13))
+            })
+            PopupUtils.infoPopup(body, "Password successfully changed!", 3)
+            loginForm = null
+        }).show(closeCallbak)
+    }
+
+    private fun loadUI(byLogin: User) {
+        loadRouters(byLogin).thenAccept {
+            Platform.runLater {
+                menu.selectionModel.selectFirst()
+            }
+        }
+        PopupUtils.infoPopup(body, "Hello, ${byLogin.firstName.value} ${byLogin.lastName.value}", 3)
+        menu.items.addAll(Label(ABOUT), Label(CHANGE_PASSWORD), Label(LOGOUT))
+        if (byLogin.role.value == Role.ADMIN) {
+            menu.items.add(0, Label(USERS))
         }
     }
 

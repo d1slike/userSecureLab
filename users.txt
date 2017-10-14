@@ -1,2 +1,2 @@
-"test","$2a$13$8yGSq4WOpSmNGe69yAz04ewgRvpP0tD2mYk.AGBf.FZk9eloUiIKe","11112","22222","true","true","USER"
-"ADMIN","$2a$13$5A9gKPTB2rARG9OgmJE4cuK.taizx3fLBb9204F/zHzYFlHRTW5xm","Admin","11111","false","true","ADMIN"
+"ADMIN","$2a$13$.vvLtKlCgAINWZGPHpy4J.eiVDzJtN/VDWDy9nqNCfk5UIaaFPhTC","Admin","","false","true","ADMIN","false"
+"user","$2a$13$52snLLPx06R/PxR30SPstOe8si4YXoSPgYYfaNPdr1m5A1DFs9X4y","test","","false","false","USER","false"

@@ -97,7 +97,7 @@ class MainController : Controller {
                 showError("Already exists", "User with login ${it.login.value} already exists")
                 return@InputDataController false
             }
-            if (!isNew && login == user.login.value && it.blocked.value) {
+            if (!isNew && login == this.user.login.value && it.blocked.value) {
                 showError("You cannot block yourself")
                 return@InputDataController false
             }
@@ -109,6 +109,9 @@ class MainController : Controller {
                     password.value = BCrypt.hashpw(pass, BCrypt.gensalt(13))
                 } else {
                     password.value = userToEdit.password.value
+                }
+                if (!isNew && !userToEdit.checkPassword.value && it.checkPassword.value) {
+                    setPassword.value = true
                 }
             })
             PopupUtils.infoPopup(root, "User successfully saved", 3)

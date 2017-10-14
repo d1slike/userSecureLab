@@ -35,6 +35,7 @@ class User {
     @Column(name = "Role", type = Type.OBJECT)
     @Enum(Role::class)
     val role: ObjectProperty<Role> = SimpleObjectProperty(Role.USER)
+    val setPassword: BooleanProperty = SimpleBooleanProperty(true)
 
 
     fun copy(): User {
@@ -64,6 +65,13 @@ class LoginRequest {
 class ChangePasswordRequest {
     @TextField(name = "Old password", type = Type.PASSWORD, isRequired = false)
     val oldPassword: StringProperty = SimpleStringProperty("")
+    @TextField(name = "Password", type = Type.PASSWORD)
+    val password: StringProperty = SimpleStringProperty("")
+    @TextField(name = "Password once again", type = Type.PASSWORD)
+    val passwordConfirm: StringProperty = SimpleStringProperty("")
+}
+
+class SetPassword {
     @TextField(name = "Password", type = Type.PASSWORD)
     val password: StringProperty = SimpleStringProperty("")
     @TextField(name = "Password once again", type = Type.PASSWORD)
